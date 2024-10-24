@@ -11,4 +11,4 @@ class Vehicle(Base):
     license_plate = Column(String(20), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"))
 
-    owner = relationship("User", back_populates="vehicles")
+    # owner = relationship("User", back_populates="vehicles")

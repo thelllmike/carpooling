@@ -1,17 +1,38 @@
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from crud import user as user_crud  # Absolute import for CRUD
-from schemas import user as user_schemas  # Absolute import for Pydantic schemas
-from db import get_db  # Absolute import for database session
+from crud import user as user_crud
+from schemas import user as user_schemas
+from db import get_db
+from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter()
 
+# Utility function to verify password
+def verify_password(plain_password: str, hashed_password: str):
+    from passlib.context import CryptContext
+    pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+    return pwd_context.verify(plain_password, hashed_password)
+
+# Login route
+@router.post("/login/")
+def login_for_access_token(
+    form_data: OAuth2PasswordRequestForm = Depends(), 
+    db: Session = Depends(get_db)
+):
+    user = user_crud.get_user_by_email(db, email=form_data.username)
+    if not user:
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email or password")
+    
+    if not verify_password(form_data.password, user.password):
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Incorrect email or password")
+    
+    return {"id": user.id, "full_name": user.full_name}
 # Register a new user
-@router.post("/users/", response_model=user_schemas.UserOut)
+@router.post("/users/", response_model=user_schemas.UserOut, status_code=status.HTTP_201_CREATED)
 def create_user(user: user_schemas.UserCreate, db: Session = Depends(get_db)):
     db_user = user_crud.get_user_by_email(db, email=user.email)
     if db_user:
-        raise HTTPException(status_code=400, detail="Email already registered")
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already registered")
     return user_crud.create_user(db=db, user=user)
 
 # Get a user by ID

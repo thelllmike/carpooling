@@ -21,5 +21,5 @@ class Trip(Base):
     user_id = Column(Integer, ForeignKey("users.id"), nullable=False)  # Reference to the driver (user)
     vehicle_id = Column(Integer, ForeignKey("vehicles.id"), nullable=False)  # Reference to the vehicle
 
-    driver = relationship("User", foreign_keys=[user_id])
-    vehicle = relationship("Vehicle", foreign_keys=[vehicle_id])
+    # driver = relationship("User", foreign_keys=[user_id])
+    # vehicle = relationship("Vehicle", foreign_keys=[vehicle_id])

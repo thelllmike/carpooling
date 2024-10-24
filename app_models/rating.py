@@ -12,6 +12,6 @@ class Rating(Base):
     rating = Column(Integer, nullable=False)
     feedback = Column(String, nullable=True)
 
-    trip = relationship("Trip")
-    rated_by_user = relationship("User", foreign_keys=[rated_by_user_id])
-    passenger = relationship("User", foreign_keys=[passenger_id])
+    # trip = relationship("Trip")
+    # rated_by_user = relationship("User", foreign_keys=[rated_by_user_id])
+    # passenger = relationship("User", foreign_keys=[passenger_id])

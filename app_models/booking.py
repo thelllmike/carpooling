@@ -15,7 +15,7 @@ class RideBooking(Base):
     booked_at = Column(DateTime, default=datetime.utcnow)
 
     # Relationships
-    trip = relationship("Trip", back_populates="ride_bookings")
-    passenger = relationship("User", back_populates="ride_bookings")
-    pickup_location = relationship("Destination", foreign_keys=[pickup_location_id])
-    drop_location = relationship("Destination", foreign_keys=[drop_location_id])
+    # trip = relationship("Trip", back_populates="ride_bookings")
+    # passenger = relationship("User", back_populates="ride_bookings")
+    # pickup_location = relationship("Destination", foreign_keys=[pickup_location_id])
+    # drop_location = relationship("Destination", foreign_keys=[drop_location_id])
