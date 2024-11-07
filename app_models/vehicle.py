@@ -10,5 +10,6 @@ class Vehicle(Base):
     model = Column(String(50), nullable=False)
     license_plate = Column(String(20), nullable=False)
     user_id = Column(Integer, ForeignKey("users.id"))
+    image_link = Column(String(255))  # New column for storing image URL or path
 
     # owner = relationship("User", back_populates="vehicles")

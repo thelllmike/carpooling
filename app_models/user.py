@@ -14,4 +14,5 @@ class User(Base):
     is_driver = Column(Boolean, default=False)
     nic_number = Column(String, nullable=True)
     license_number = Column(String, nullable=True)
+    profile_picture = Column(String, nullable=True)  # New column for profile picture
     created_at = Column(DateTime, default=datetime.utcnow)

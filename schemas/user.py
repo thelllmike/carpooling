@@ -4,6 +4,7 @@ from typing import Optional
 class UserBase(BaseModel):
     full_name: str
     email: str
+    profile_picture: Optional[str] = None  # Optional field for profile picture
 
 class UserCreate(UserBase):
     password: str
@@ -16,6 +17,7 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     nic_number: Optional[str] = None
     license_number: Optional[str] = None
+    profile_picture: Optional[str] = None  # Optional field for updating profile picture
 
 class UserOut(UserBase):
     id: int

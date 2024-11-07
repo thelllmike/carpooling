@@ -5,6 +5,7 @@ class VehicleBase(BaseModel):
     model: str
     license_plate: str
     user_id: int
+    image_link: str = None  # Optional field for storing the image link
 
 class VehicleCreate(VehicleBase):
     pass
