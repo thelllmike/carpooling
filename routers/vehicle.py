@@ -17,9 +17,9 @@ def read_vehicle(vehicle_id: int, db: Session = Depends(get_db)):
         raise HTTPException(status_code=404, detail="Vehicle not found")
     return db_vehicle
 
-@router.get("/vehicles/user/{user_id}", response_model=list[vehicle_schemas.VehicleOut])
-def read_vehicles_by_user(user_id: int, db: Session = Depends(get_db)):
-    return vehicle_crud.get_vehicles_by_user(db, user_id)
+# @router.get("/vehicles/user/{user_id}", response_model=list[vehicle_schemas.VehicleOut])
+# def read_vehicles_by_user(user_id: int, db: Session = Depends(get_db)):
+#     return vehicle_crud.get_vehicles_by_user(db, user_id)
 
 @router.delete("/vehicles/{vehicle_id}", response_model=vehicle_schemas.VehicleOut)
 def delete_vehicle(vehicle_id: int, db: Session = Depends(get_db)):
@@ -27,3 +27,7 @@ def delete_vehicle(vehicle_id: int, db: Session = Depends(get_db)):
     if db_vehicle is None:
         raise HTTPException(status_code=404, detail="Vehicle not found")
     return db_vehicle
+
+@router.get("/vehicles/user/{user_id}", response_model=list[vehicle_schemas.VehicleOut])
+def read_vehicles_by_user(user_id: int, db: Session = Depends(get_db)):
+    return vehicle_crud.get_vehicles_by_user(db, user_id)

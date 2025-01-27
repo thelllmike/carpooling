@@ -22,6 +22,7 @@ class UserUpdate(BaseModel):
 class UserOut(UserBase):
     id: int
     is_driver: bool
+    license_number: Optional[str] = None
 
     class Config:
         orm_mode = True
