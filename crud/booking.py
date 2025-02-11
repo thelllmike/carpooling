@@ -1,4 +1,4 @@
-from sqlalchemy.orm import Session
+from sqlalchemy.orm import Session,joinedload
 from app_models.booking import RideBooking
 from schemas.booking import RideBookingCreate
 
@@ -13,6 +13,13 @@ def create_ride_booking(db: Session, ride_booking: RideBookingCreate):
 # Get a ride booking by ID
 def get_ride_booking(db: Session, booking_id: int):
     return db.query(RideBooking).filter(RideBooking.id == booking_id).first()
+
+def get_ride_bookings_by_trip(db: Session, trip_id: int):
+    return db.query(RideBooking).options(
+        joinedload(RideBooking.passenger),
+        joinedload(RideBooking.pickup_location),
+        joinedload(RideBooking.drop_location)
+    ).filter(RideBooking.trip_id == trip_id).all()
 
 # Get all bookings for a specific trip
 def get_ride_bookings_by_trip(db: Session, trip_id: int):

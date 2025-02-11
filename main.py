@@ -9,6 +9,7 @@ from app_models import rating as rating_models
 from app_models import passenger as passenger_models
 from app_models import notification as notification_models
 from app_models import vehicle_pricing as vehicle_price_model
+from app_models import start as start_models  # Add start_models to import
 
 from routers import user as user_router
 from routers import booking as booking_router
@@ -19,6 +20,7 @@ from routers import rating as rating_router
 from routers import passenger as passenger_router
 from routers import notification as notification_router
 from routers import vehicle_pricing as vehicle_price_router  # Rename to avoid conflict
+from routers import start as start_router  # Add start_router to import
 
 # Create database tables
 user_models.Base.metadata.create_all(bind=engine)
@@ -30,6 +32,7 @@ rating_models.Base.metadata.create_all(bind=engine)
 passenger_models.Base.metadata.create_all(bind=engine)
 notification_models.Base.metadata.create_all(bind=engine)
 vehicle_price_model.Base.metadata.create_all(bind=engine)
+start_models.Base.metadata.create_all(bind=engine)  # Create start table
 
 app = FastAPI()
 
@@ -43,6 +46,7 @@ app.include_router(rating_router.router, prefix="/ratings", tags=["ratings"])
 app.include_router(passenger_router.router, prefix="/passengers", tags=["passengers"])
 app.include_router(notification_router.router, prefix="/notifications", tags=["notifications"])
 app.include_router(vehicle_price_router.router, prefix="/vehicleprice", tags=["vehicleprice"])  # Vehicle pricing router
+app.include_router(start_router.router, prefix="/starts", tags=["starts"])  # Include start router
 
 @app.get("/")
 def read_root():

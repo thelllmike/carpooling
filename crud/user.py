@@ -54,9 +54,12 @@ def update_user(db: Session, user_id: int, user_update: UserUpdate):
             db_user.nic_number = user_update.nic_number
         if user_update.license_number:
             db_user.license_number = user_update.license_number
+        if user_update.profile_picture:  # Updating the profile picture if provided
+            db_user.profile_picture = user_update.profile_picture
         db.commit()
         db.refresh(db_user)
     return db_user
+
 
 # Delete user
 def delete_user(db: Session, user_id: int):
