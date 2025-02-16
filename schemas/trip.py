@@ -30,3 +30,10 @@ class TripOut(TripBase):
 
     class Config:
         orm_mode = True
+
+# New schema for returning trips with driver and vehicle details
+class TripDetailOut(TripOut):
+    driver_name: str
+    driver_profile_picture: Optional[str]
+    vehicle_type: str
+    vehicle_image: Optional[str]

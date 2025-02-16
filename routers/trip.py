@@ -39,3 +39,9 @@ def delete_trip(trip_id: int, db: Session = Depends(get_db)):
     if db_trip is None:
         raise HTTPException(status_code=404, detail="Trip not found")
     return db_trip
+
+
+@router.get("/trips/", response_model=list[trip_schemas.TripDetailOut])
+def get_all_trips(db: Session = Depends(get_db)):
+    trips = trip_crud.get_all_trips(db)
+    return trips

@@ -1,6 +1,8 @@
 from sqlalchemy.orm import Session
 from app_models.trip import Trip
-from schemas.trip import TripCreate, TripUpdate
+from schemas.trip import TripCreate, TripUpdate ,TripDetailOut
+from app_models.user import User
+from app_models.vehicle import Vehicle
 
 # Create a new trip
 def create_trip(db: Session, trip: TripCreate):
@@ -35,3 +37,42 @@ def delete_trip(db: Session, trip_id: int):
         db.delete(db_trip)
         db.commit()
     return db_trip
+
+
+# Get all trips with driver profile picture and vehicle details
+def get_all_trips(db: Session):
+    trips = (
+        db.query(
+            Trip,
+            User.full_name,
+            User.profile_picture,
+            Vehicle.vehicle_type,
+            Vehicle.image_link,
+        )
+        .join(User, Trip.user_id == User.id)
+        .join(Vehicle, Trip.vehicle_id == Vehicle.id)
+        .all()
+    )
+
+    return [
+        TripDetailOut(
+            pickup_location=trip.Trip.pickup_location,
+            drop_location=trip.Trip.drop_location,
+            date=trip.Trip.date,
+            seats_available=trip.Trip.seats_available,
+            price=trip.Trip.price,
+            ride_fare=trip.Trip.ride_fare,
+            estimated_time=trip.Trip.estimated_time,
+            id=trip.Trip.id,
+            user_id=trip.Trip.user_id,
+            vehicle_id=trip.Trip.vehicle_id,
+            status=trip.Trip.status,
+            is_completed=trip.Trip.is_completed,
+            is_canceled=trip.Trip.is_canceled,
+            driver_name=trip.full_name,
+            driver_profile_picture=trip.profile_picture,
+            vehicle_type=trip.vehicle_type,
+            vehicle_image=trip.image_link,
+        )
+        for trip in trips
+    ]

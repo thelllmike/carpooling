@@ -7,7 +7,7 @@ from db import get_db
 
 router = APIRouter()
 
-@router.get("/trips/{trip_id}/bookings", response_model=List[RideBookingDetail])
+@router.get("/trips/{trip_id}", response_model=List[RideBookingDetail])
 def get_trip_bookings(trip_id: int, db: Session = Depends(get_db)):
     bookings = ride_booking_crud.get_ride_bookings_by_trip(db, trip_id)
     if not bookings:
