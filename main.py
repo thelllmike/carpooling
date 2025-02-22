@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from fastapi.staticfiles import StaticFiles
 from db import engine
 from app_models import user as user_models
 from app_models import booking as booking_models
@@ -41,12 +42,14 @@ app.include_router(user_router.router, prefix="/users", tags=["users"])
 app.include_router(booking_router.router, prefix="/bookings", tags=["bookings"])
 app.include_router(trip_router.router, prefix="/trips", tags=["trips"])
 app.include_router(destination_router.router, prefix="/destinations", tags=["destinations"])
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 app.include_router(vehicle_router.router, prefix="/vehicles", tags=["vehicles"])  # Vehicles router
 app.include_router(rating_router.router, prefix="/ratings", tags=["ratings"])
 app.include_router(passenger_router.router, prefix="/passengers", tags=["passengers"])
 app.include_router(notification_router.router, prefix="/notifications", tags=["notifications"])
 app.include_router(vehicle_price_router.router, prefix="/vehicleprice", tags=["vehicleprice"])  # Vehicle pricing router
 app.include_router(start_router.router, prefix="/starts", tags=["starts"])  # Include start router
+
 
 @app.get("/")
 def read_root():

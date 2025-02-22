@@ -1,9 +1,22 @@
 from sqlalchemy.orm import Session,joinedload
 from app_models.booking import RideBooking
 from schemas.booking import RideBookingCreate
+from app_models.user import User  # Import User model
 
-# Create a new ride booking
+# # Create a new ride booking
+# def create_ride_booking(db: Session, ride_booking: RideBookingCreate):
+#     db_ride_booking = RideBooking(**ride_booking.dict())
+#     db.add(db_ride_booking)
+#     db.commit()
+#     db.refresh(db_ride_booking)
+#     return db_ride_booking
+
 def create_ride_booking(db: Session, ride_booking: RideBookingCreate):
+    # Validate that the passenger exists in the users table.
+    passenger = db.query(User).filter(User.id == ride_booking.passenger_id).first()
+    if not passenger:
+        raise Exception(f"Passenger ID {ride_booking.passenger_id} does not exist in users table.")
+    
     db_ride_booking = RideBooking(**ride_booking.dict())
     db.add(db_ride_booking)
     db.commit()

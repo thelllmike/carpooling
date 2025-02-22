@@ -5,9 +5,9 @@ class VehicleBase(BaseModel):
     model: str
     license_plate: str
     user_id: int
-    image_link: str = None  # Optional field for storing the image link
-    available_seat: int  # Number of available seats in the vehicle
-    vehicle_type: str  # Type of vehicle (e.g., SUV, Van, Sedan)
+    image_link: str | None = None  # Optional field for storing the image link
+    available_seat: int
+    vehicle_type: str  # E.g. SUV, Van, Sedan, etc.
 
 class VehicleCreate(VehicleBase):
     pass
