@@ -1,4 +1,4 @@
-from typing import List
+from typing import Dict, List
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from crud import booking as ride_booking_crud
@@ -6,6 +6,22 @@ from schemas.booking import RideBookingDetail, RideBookingCreate, RideBookingOut
 from db import get_db
 
 router = APIRouter()
+
+@router.get("/ride_bookings/trip/{trip_id}/user/{user_id}/booking_id", response_model=Dict[str, int])
+def get_booking_id_by_trip_and_user(
+    trip_id: int,
+    user_id: int,
+    db: Session = Depends(get_db)
+):
+    """
+    Given a trip ID and a user ID, find the passenger row (id),
+    then find the booking row that references that passenger.id.
+    Returns {"booking_id": <int>}.
+    """
+    booking = ride_booking_crud.get_booking_id_by_trip_and_user(db, trip_id, user_id)
+    if not booking:
+        raise HTTPException(status_code=404, detail="Booking not found for the given trip and user")
+    return {"booking_id": booking.id}
 
 @router.get("/trips/{trip_id}", response_model=List[RideBookingDetail])
 def get_trip_bookings(trip_id: int, db: Session = Depends(get_db)):
