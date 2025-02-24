@@ -38,6 +38,8 @@ start_models.Base.metadata.create_all(bind=engine)  # Create start table
 app = FastAPI()
 
 # Include routers
+app.mount("/profilepictures", StaticFiles(directory="profilepictures"), name="profilepictures")
+
 app.include_router(user_router.router, prefix="/users", tags=["users"])
 app.include_router(booking_router.router, prefix="/bookings", tags=["bookings"])
 app.include_router(trip_router.router, prefix="/trips", tags=["trips"])

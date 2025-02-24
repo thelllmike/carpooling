@@ -16,12 +16,12 @@ os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/vehicles/", response_model=vehicle_schemas.VehicleOut)
 async def create_vehicle(
-    make: str,
-    model: str,
-    license_plate: str,
-    user_id: int,
-    available_seat: int,
-    vehicle_type: str,
+    make: str = Form(...),
+    model: str = Form(...),
+    license_plate: str = Form(...),
+    user_id: int = Form(...),
+    available_seat: int = Form(...),
+    vehicle_type: str = Form(...),
     image: UploadFile | None = File(None),
     db: Session = Depends(get_db)
 ):
