@@ -5,13 +5,14 @@ from typing import Optional
 class UserDetail(BaseModel):
     id: int
     profile_picture: Optional[str] = None
+    full_name: str
 
     class Config:
         orm_mode = True
 
 class DestinationDetail(BaseModel):
     id: int
-    location_name: str
+    # location_name: str
     latitude: float
     longitude: float
 
