@@ -1,5 +1,16 @@
-fastapi
-uvicorn
-sqlalchemy
-pydantic
-passlib
+# fastapi
+# uvicorn
+# sqlalchemy
+# pydantic
+# passlib
+pandas
+numpy
+matplotlib
+seaborn
+torch
+transformers
+scikit-learn
+joblib
+# Uncomment the next lines if needed:
+# psycopg2-binary
+# python-dotenv

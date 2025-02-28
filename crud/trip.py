@@ -76,3 +76,11 @@ def get_all_trips(db: Session):
         )
         for trip in trips
     ]
+
+def update_seat_availability(db: Session, trip_id: int, seats_available: int):
+    db_trip = get_trip(db, trip_id)
+    if db_trip:
+        db_trip.seats_available = seats_available
+        db.commit()
+        db.refresh(db_trip)
+    return db_trip

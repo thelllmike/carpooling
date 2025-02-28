@@ -81,3 +81,40 @@ def delete_vehicle(vehicle_id: int, db: Session = Depends(get_db)):
 @router.get("/vehicles/user/{user_id}", response_model=list[vehicle_schemas.VehicleOut])
 def read_vehicles_by_user(user_id: int, db: Session = Depends(get_db)):
     return vehicle_crud.get_vehicles_by_user(db, user_id)
+
+@router.put("/vehicles/{vehicle_id}", response_model=vehicle_schemas.VehicleOut)
+async def update_vehicle(
+    vehicle_id: int,
+    make: str = Form(...),
+    model: str = Form(...),
+    license_plate: str = Form(...),
+    user_id: int = Form(...),
+    available_seat: int = Form(...),
+    vehicle_type: str = Form(...),
+    image_link: str = Form(...),
+    db: Session = Depends(get_db)
+):
+    """
+    Updates an existing vehicle.
+    
+    All fields are required. The image_link should be provided as a URL.
+    """
+    # Retrieve the current vehicle first
+    db_vehicle = vehicle_crud.get_vehicle(db, vehicle_id)
+    if not db_vehicle:
+        raise HTTPException(status_code=404, detail="Vehicle not found")
+
+    vehicle_update_data = vehicle_schemas.VehicleUpdate(
+        make=make,
+        model=model,
+        license_plate=license_plate,
+        user_id=user_id,
+        image_link=image_link,
+        available_seat=available_seat,
+        vehicle_type=vehicle_type
+    )
+
+    updated_vehicle = vehicle_crud.update_vehicle(db, vehicle_id, vehicle_update_data)
+    if updated_vehicle is None:
+        raise HTTPException(status_code=404, detail="Vehicle not found")
+    return updated_vehicle

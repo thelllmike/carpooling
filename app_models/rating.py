@@ -8,6 +8,6 @@ class Rating(Base):
     id = Column(Integer, primary_key=True, index=True)
     trip_id = Column(Integer, ForeignKey("trips.id"), nullable=False)
     rated_by_user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    passenger_id = Column(Integer, ForeignKey("users.id"), nullable=True)
+    driver_id = Column(Integer, ForeignKey("users.id"), nullable=True)  # New field to store driver ratings
     rating = Column(Integer, nullable=False)
-    feedback = Column(String(255), nullable=True)  # Added length for VARCHAR
+    feedback = Column(String(255), nullable=True)  # Optional feedback

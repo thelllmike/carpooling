@@ -37,3 +37,7 @@ class TripDetailOut(TripOut):
     driver_profile_picture: Optional[str]
     vehicle_type: str
     vehicle_image: Optional[str]
+    driver_overall_rating: Optional[float] = None
+
+class TripSeatUpdate(BaseModel):
+    seats_available: int
