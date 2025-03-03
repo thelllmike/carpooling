@@ -9,10 +9,10 @@ from db import get_db
 from fastapi.security import OAuth2PasswordRequestForm
 
 router = APIRouter()
-# Directory to store profile pictures
+
+
 PROFILE_PIC_DIR = "profilepictures"
 os.makedirs(PROFILE_PIC_DIR, exist_ok=True)
-
 
 @router.put("/users/{user_id}", response_model=user_schemas.UserOut)
 async def update_user_with_profile_picture(
@@ -21,44 +21,46 @@ async def update_user_with_profile_picture(
     password: Optional[str] = Form(None),
     nic_number: Optional[str] = Form(None),
     license_number: Optional[str] = Form(None),
-    profile_picture: Optional[UploadFile] = File(None),  # ✅ File Upload Enabled
+    profile_picture: Optional[UploadFile] = File(None),
     db: Session = Depends(get_db),
 ):
     """
-    Update user information and optionally upload a profile picture.
-    Accepts multipart/form-data.
+    Update a user at PUT /users/users/{user_id} with optional file upload.
+    Fields must match the ones in the route signature.
     """
-
-    # Handle file upload
-    pic_path = None
-    if profile_picture:
-        ext = profile_picture.filename.split(".")[-1]
-        file_name = f"{uuid.uuid4()}.{ext}"
-        file_path = os.path.join(PROFILE_PIC_DIR, file_name)
-        with open(file_path, "wb") as buffer:
-            buffer.write(await profile_picture.read())
-        pic_path = file_path  # Save file path to database
-
-    # Prepare user update data
-    user_update_data = {
-        "full_name": full_name,
-        "password": password,
-        "nic_number": nic_number,
-        "license_number": license_number,
-    }
-
-    # Add profile picture only if uploaded
-    if pic_path:
-        user_update_data["profile_picture"] = pic_path
-
-    # Update user in database
-    updated_user = user_crud.update_user(db=db, user_id=user_id, user_update=user_update_data)
-
-    if not updated_user:
+    # 1) Fetch the existing user
+    db_user = user_crud.get_user(db, user_id)
+    if not db_user:
         raise HTTPException(status_code=404, detail="User not found")
 
-    return updated_user
+    # 2) Handle file upload if provided
+    new_pic_path = db_user.profile_picture
+    if profile_picture:
+        file_ext = profile_picture.filename.split(".")[-1]
+        unique_filename = f"{uuid.uuid4()}.{file_ext}"
+        file_path = os.path.join(PROFILE_PIC_DIR, unique_filename)
+        try:
+            with open(file_path, "wb") as buffer:
+                buffer.write(await profile_picture.read())
+        except Exception as e:
+            raise HTTPException(status_code=500, detail="Error saving profile picture")
+        new_pic_path = file_path
 
+    # 3) Build a UserUpdate object
+    user_update_data = UserUpdate(
+        full_name=full_name if full_name else db_user.full_name,
+        password=password if password else db_user.password,
+        nic_number=nic_number if nic_number else db_user.nic_number,
+        license_number=license_number if license_number else db_user.license_number,
+        profile_picture=new_pic_path,
+    )
+
+    # 4) Update user in DB
+    updated_user = user_crud.update_user(db, user_id, user_update_data)
+    if not updated_user:
+        raise HTTPException(status_code=400, detail="User update failed")
+
+    return updated_user
 
 
 # Utility function to verify password

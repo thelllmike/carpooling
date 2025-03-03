@@ -17,12 +17,16 @@ class UserUpdate(BaseModel):
     password: Optional[str] = None
     nic_number: Optional[str] = None
     license_number: Optional[str] = None
-    profile_picture: Optional[str] = None  # Optional field for updating profile picture
+    # We'll store the file path in the DB; not the raw file bytes
+    profile_picture: Optional[str] = None # Optional field for updating profile picture
 
-class UserOut(UserBase):
+class UserOut(BaseModel):
     id: int
-    is_driver: bool
-    license_number: Optional[str] = None
+    full_name: str
+    nic_number: str
+    license_number: str
+    profile_picture: Optional[str] = None
 
     class Config:
-        orm_mode = True
+        from_attributes = True  # Pydantic v2 for ORM
+        # or "orm_mode = True" if using Pydantic v1

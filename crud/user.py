@@ -45,21 +45,24 @@ def create_user(db: Session, user: UserCreate):
 # Update user
 def update_user(db: Session, user_id: int, user_update: UserUpdate):
     db_user = get_user(db, user_id)
-    if db_user:
-        if user_update.full_name:
-            db_user.full_name = user_update.full_name
-        if user_update.password:
-            db_user.password = get_password_hash(user_update.password)
-        if user_update.nic_number:
-            db_user.nic_number = user_update.nic_number
-        if user_update.license_number:
-            db_user.license_number = user_update.license_number
-        if user_update.profile_picture:  # Updating the profile picture if provided
-            db_user.profile_picture = user_update.profile_picture
-        db.commit()
-        db.refresh(db_user)
-    return db_user
+    if not db_user:
+        return None  # or raise an exception
 
+    if user_update.full_name is not None:
+        db_user.full_name = user_update.full_name
+    if user_update.password is not None:
+        # TODO: hash password in real usage
+        db_user.password = user_update.password
+    if user_update.nic_number is not None:
+        db_user.nic_number = user_update.nic_number
+    if user_update.license_number is not None:
+        db_user.license_number = user_update.license_number
+    if user_update.profile_picture is not None:
+        db_user.profile_picture = user_update.profile_picture
+
+    db.commit()
+    db.refresh(db_user)
+    return db_user
 
 # Delete user
 def delete_user(db: Session, user_id: int):

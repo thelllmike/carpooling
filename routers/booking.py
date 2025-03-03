@@ -7,7 +7,7 @@ from db import get_db
 
 router = APIRouter()
 
-@router.get("/ride_bookings/trip/booking_id", response_model=Dict[str, int])
+@router.get("/ride_bookings/trip/booking_id/{trip_id}/{user_id}", response_model=Dict[str, int])
 def get_booking_id_by_trip_and_user(
     trip_id: int,
     user_id: int,
