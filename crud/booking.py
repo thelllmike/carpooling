@@ -63,6 +63,18 @@ def update_ride_booking(db: Session, booking_id: int, confirmed: bool):
         db.refresh(db_ride_booking)
     return db_ride_booking
 
+
+def get_ride_booking(db: Session, booking_id: int):
+    return db.query(RideBooking).filter(RideBooking.id == booking_id).first()
+
+def update_ride_booking_crud(db: Session, booking_id: int, confirmed: bool):
+    db_ride_booking = get_ride_booking(db, booking_id)
+    if db_ride_booking:
+        db_ride_booking.confirmed = confirmed
+        db.commit()
+        db.refresh(db_ride_booking)
+    return db_ride_booking
+
 # Delete a ride booking
 def delete_ride_booking(db: Session, booking_id: int):
     db_ride_booking = get_ride_booking(db, booking_id)

@@ -58,3 +58,16 @@ class RideBookingOut(RideBookingBase):
 
     class Config:
         orm_mode = True
+
+# class RideBookingUpdate(BaseModel):
+class RideBookingUpdate(BaseModel):
+    confirmed: bool
+
+# Response model (adjust fields as needed)
+class RideBookingOut(BaseModel):
+    id: int
+    confirmed: bool
+    # Add other fields as necessary
+
+    class Config:
+        orm_mode = True

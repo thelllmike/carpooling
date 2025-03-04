@@ -26,6 +26,7 @@ class UserOut(BaseModel):
     nic_number: str
     license_number: str
     profile_picture: Optional[str] = None
+    email: str
 
     class Config:
         from_attributes = True  # Pydantic v2 for ORM
